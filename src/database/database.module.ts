@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -16,9 +16,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         database: configService.get<string>('database.name'),
         autoLoadEntities: true,
         synchronize: true,
-        logging: false,
       }),
     }),
   ],
 })
-export class DatabaseModule {}
+export class DatabaseModule { }

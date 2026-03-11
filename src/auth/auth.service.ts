@@ -7,7 +7,7 @@ import {
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { randomUUID } from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
 import { Repository } from 'typeorm';
 
 import jwtConfig from '../common/config/jwt.config';
@@ -77,10 +77,11 @@ export class AuthService {
   async generateAccessToken(
     user: Partial<User>,
   ): Promise<{ accessToken: string }> {
-    const tokenId = randomUUID();
+    const tokenId = uuidv4();
 
-    await this.redisService.insert(`user-${user.id}`, tokenId);
+    // await this.redisService.insert(`user-${user.id}`, tokenId);
 
+    // @ts-ignore
     const accessToken = await this.jwtService.signAsync(
       {
         id: user.id,

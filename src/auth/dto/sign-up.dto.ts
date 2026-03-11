@@ -20,6 +20,14 @@ export class SignUpDto {
   readonly email: string;
 
   @ApiProperty({
+    description: 'Role of user',
+    example: 'user',
+  })
+  @IsNotEmpty()
+  @MaxLength(255)
+  readonly role: string;
+
+  @ApiProperty({
     description: 'Password of user',
     example: 'Pass#123',
   })

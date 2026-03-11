@@ -83,7 +83,7 @@ describe('AuthService', () => {
       const saveSpy = jest
         .spyOn(userRepository, 'save')
         .mockRejectedValueOnce({ code: MysqlErrorCode.UniqueViolation });
-
+      // @ts-ignore
       await expect(authService.signUp(signUpDto)).rejects.toThrowError(
         new ConflictException(`User [${signUpDto.email}] already exist`),
       );
@@ -95,7 +95,7 @@ describe('AuthService', () => {
       const saveSpy = jest
         .spyOn(userRepository, 'save')
         .mockRejectedValueOnce(new Error('Unexpected error'));
-
+// @ts-ignore
       await expect(authService.signUp(signUpDto)).rejects.toThrowError(
         new Error('Unexpected error'),
       );

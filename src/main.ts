@@ -6,6 +6,17 @@ import { AppModule } from './app.module';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { setupSwagger } from './swagger';
 
+
+import * as crypto from 'node:crypto';
+
+if (!global['crypto']) {
+  Object.defineProperty(global, 'crypto', {
+    value: {
+      randomUUID: () => crypto.randomUUID(),
+    },
+  });
+}
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
