@@ -55,6 +55,7 @@ describe('AuthService', () => {
     const signUpDto: SignUpDto = {
       email: 'test@example.com',
       password: 'password',
+      role: 'user',
       passwordConfirm: 'password',
     };
     let user: User;
