@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nestjs-api-service
+spec:
+  type: NodePort # This makes it accessible on your localhost
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 30001 # Access via localhost:30001
+  selector:
+    app: nestjs-api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nestjs-api-deployment
+spec:
+  replicas: 1 # For high availability
+  selector:
+    matchLabels:
+      app: nestjs-api
+  template:
+    metadata:
+      labels:
+        app: nestjs-api
+    spec:
+      containers:
+      - name: api
+        image: bytecodepandit/nestjs-auth-system:latest # Change to your Hub image
+        env:
+        - name: PORT
+          value: "3000"
+        - name: DB_HOST
+          value: "nestjs-auth-mysql"
+        - name: REDIS_HOST
+          value: "nestjs-auth-redis"
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: nestjs-auth-secrets
+              key: DB_PASSWORD
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: nestjs-auth-secrets
+              key: REDIS_PASSWORD
+        ports:
+        - containerPort: 3000
