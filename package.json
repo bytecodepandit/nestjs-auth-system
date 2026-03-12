@@ -47,7 +47,7 @@
     "uuid": "^13.0.0"
   },
   "resolutions": {
-    "chokidar": "4.0.3"
+    "chokidar": "5.0.0"
   },
   "devDependencies": {
     "@golevelup/ts-jest": "^1.2.1",
@@ -64,7 +64,7 @@
     "@types/supertest": "^7.2.0",
     "@typescript-eslint/eslint-plugin": "^8.56.1",
     "@typescript-eslint/parser": "^8.56.1",
-    "chokidar": "4.0.3",
+    "chokidar": "5.0.0",
     "eslint": "^10.0.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
