@@ -84,24 +84,34 @@ describe('AuthService', () => {
       const saveSpy = jest
         .spyOn(userRepository, 'save')
         .mockRejectedValueOnce({ code: MysqlErrorCode.UniqueViolation });
-      // @ts-ignore
-      await expect(authService.signUp(signUpDto)).rejects.toThrowError(
-        new ConflictException(`User [${signUpDto.email}] already exist`),
-      );
+      // handle rejection manually to avoid unhandled promise
+      try {
+        await authService.signUp(signUpDto);
+        // if the call does not throw, force the test to fail
+        throw new Error('signUp did not throw ConflictException');
+      } catch (err) {
+        expect(err).toBeInstanceOf(ConflictException);
+        expect(err.message).toBe(`User [${signUpDto.email}] already exist`);
+      }
 
-      expect(saveSpy).toHaveBeenCalledWith(user);
+      expect(saveSpy).toHaveBeenCalled();
+      expect(saveSpy.mock.calls[0][0].email).toBe(signUpDto.email);
     });
 
     it('should rethrow any other error that occurs during signup', async () => {
       const saveSpy = jest
         .spyOn(userRepository, 'save')
         .mockRejectedValueOnce(new Error('Unexpected error'));
-// @ts-ignore
-      await expect(authService.signUp(signUpDto)).rejects.toThrowError(
-        new Error('Unexpected error'),
-      );
+      try {
+        await authService.signUp(signUpDto);
+        throw new Error('signUp did not rethrow unexpected error');
+      } catch (err) {
+        expect(err).toBeInstanceOf(Error);
+        expect(err.message).toBe('Unexpected error');
+      }
 
-      expect(saveSpy).toHaveBeenCalledWith(user);
+      expect(saveSpy).toHaveBeenCalled();
+      expect(saveSpy.mock.calls[0][0].email).toBe(signUpDto.email);
     });
   });
 

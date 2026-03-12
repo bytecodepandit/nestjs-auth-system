@@ -79,7 +79,7 @@ export class AuthService {
   ): Promise<{ accessToken: string }> {
     const tokenId = uuidv4();
 
-    // await this.redisService.insert(`user-${user.id}`, tokenId);
+    await this.redisService.insert(`user-${user.id}`, tokenId);
 
     // @ts-ignore
     const accessToken = await this.jwtService.signAsync(

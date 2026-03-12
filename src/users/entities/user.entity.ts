@@ -23,6 +23,10 @@ export class User {
   @Column({ unique: true })
   email: string;
 
+  @ApiProperty({ description: 'Role of user', example: 'user' })
+  @Column()
+  role: string;
+
   @ApiHideProperty()
   @Column()
   @Exclude({ toPlainOnly: true })

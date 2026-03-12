@@ -66,20 +66,28 @@ describe('JwtAuthGuard', () => {
   it('should not allow access without a token', async () => {
     jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(false);
     jest.spyOn(guard as any, 'getToken').mockReturnValue(undefined);
-    // @ts-ignore
-    await expect(guard.canActivate(mockExecutionContext)).rejects.toThrowError(
-      new UnauthorizedException('Authorization token is required'),
-    );
+    try {
+      await guard.canActivate(mockExecutionContext);
+      throw new Error('guard.canActivate should have thrown');
+    } catch (err) {
+      expect(err).toBeInstanceOf(UnauthorizedException);
+      expect(err.message).toBe('Authorization token is required');
+    }
   });
 
   it('should not allow access with an invalid token', async () => {
     jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(false);
     jest.spyOn(guard as any, 'getToken').mockReturnValue('invalid-token');
+    // ensure verifyAsync returns a valid payload so we hit the redis check
+    jest.spyOn(jwtService, 'verifyAsync').mockResolvedValue({ id: '123', tokenId: 'abc' } as any);
     jest.spyOn(redisService, 'validate').mockResolvedValue(false);
-    // @ts-ignore
-    await expect(guard.canActivate(mockExecutionContext)).rejects.toThrowError(
-      new UnauthorizedException('Authorization token is not valid'),
-    );
+    try {
+      await guard.canActivate(mockExecutionContext);
+      throw new Error('guard.canActivate should have thrown');
+    } catch (err) {
+      expect(err).toBeInstanceOf(UnauthorizedException);
+      expect(err.message).toBe('Authorization token is not valid');
+    }
   });
 
   it('should allow access with a valid token', async () => {

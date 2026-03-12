@@ -50,6 +50,7 @@ describe('App (e2e)', () => {
           email: 'atest@email.com',
           password: 'Pass#123',
           passwordConfirm: 'Pass#123',
+          role: 'user',
         };
 
         return request(server)
@@ -65,6 +66,7 @@ describe('App (e2e)', () => {
           email: 'invalid-email',
           password: 'Pass#123',
           passwordConfirm: 'Pass#123',
+          role: 'user',
         };
 
         return request(server)
@@ -83,6 +85,7 @@ describe('App (e2e)', () => {
           email: 'atest@email.com',
           password: 'Pass#123',
           passwordConfirm: 'Pass#123',
+          role: 'user',
         };
 
         return request(server)
